@@ -13,6 +13,7 @@ variables:
   sp: 'SpHelmAKs'
   tfContainerName: 'tstate'
   tfKey: 'terraform.tfstate'
+  prefix: 'hg28'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -29,3 +30,37 @@ jobs:
           scriptLocation: 'scriptPath'
           scriptPath: 'terraform/state.sh'
           arguments: '$(rgName) $(location) $(strName) $(tfContainerName)'
+
+  - job: CreateResources
+    dependsOn: CreateStorage
+    displayName: Create Azure Resources
+    steps:
+      - task: replacetokens@3
+        displayName: Replace variables
+        inputs:
+          targetFiles: '**/*.tf'
+          encoding: 'auto'
+          writeBOM: true
+          actionOnMissing: 'warn'
+          keepToken: false
+          tokenPrefix: '__'
+          tokenSuffix: '__'
+          useLegacyPattern: false
+          enableTelemetry: true
+      - task: TerraformTaskV1@0
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          backendServiceArm: $(sp)
+          backendAzureRmResourceGroupName: $(rgName)
+          backendAzureRmStorageAccountName: $(strName)
+          backendAzureRmContainerName: $(tfContainerName)
+          backendAzureRmKey: $(tfKey)
+      - task: TerraformTaskV1@0
+        displayName: Apply Terraform
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+          environmentServiceNameAzureRM: $(sp)          
