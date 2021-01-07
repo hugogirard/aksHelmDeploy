@@ -9,7 +9,7 @@ trigger:
 variables:
   rgName: 'terraformState'
   location: 'eastus'
-  strame: 'hgterrastate'
+  strName: 'hgterrastate'
   sp: 'SpHelmAKs'
   tfContainerName: 'tstate'
   tfKey: 'terraform.tfstate'
