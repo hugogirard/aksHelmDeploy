@@ -18,6 +18,11 @@ variable "address_space" {
   default = "10.0.0.0/8"
 }
 
+variable "subnet_name" {
+    description = "The address space of the subnet"
+    default = "aksSubnet"
+}
+
 variable "subnet_address_space" {
   description = "The address space of the subnet containing AKS"
   default = "10.0.0.0/16"
