@@ -15,7 +15,7 @@ variable "vnet_name" {
 
 variable "address_space" {
   description = "The address spacing of the VNET"
-  default = "10.0.0.0/8"
+  default = ["10.0.0.0/8"]
 }
 
 variable "subnet_name" {
