@@ -15,6 +15,7 @@ variable "vnet_name" {
 
 variable "address_space" {
   description = "The address spacing of the VNET"
+  type = list(string)
   default = ["10.0.0.0/8"]
 }
 
