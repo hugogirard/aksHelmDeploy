@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+variables:
+  rgName: 'terraformState'
+  location: 'eastus'
+  strame: 'hgterrastate'
+  sp: 'SpHelmAKs'
+  tfContainerName: 'tstate'
+  tfKey: 'terraform.tfstate'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: CreateStorage
+    displayName: Create Terraform state    
+    steps:      
+      - task: AzureCLI@2
+        displayName: Create Azure Storage State
+        inputs:
+          azureSubscription: $(sp)
+          scriptType: 'bash'
+          scriptLocation: 'scriptPath'
+          scriptPath: 'terraform/state.sh'
+          arguments: '$(rgName) $(location) $(strName) $(tfContainerName)'
