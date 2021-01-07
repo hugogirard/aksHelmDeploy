@@ -1,5 +1,5 @@
 resource "azurerm_network_interface" "vm_nic" {
-  name                = "${var.prefix}-nic"
+  name                = "jumpbox-nic"
   location            = var.location
   resource_group_name = var.resourceGroupName
 
