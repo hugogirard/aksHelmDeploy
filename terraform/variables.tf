@@ -26,7 +26,8 @@ variable "subnet_name" {
 
 variable "subnet_address_space" {
   description = "The address space of the subnet containing AKS"
-  default = "10.0.0.0/16"
+  type = list(string)
+  default = ["10.0.0.0/16"]
 }
 
 variable "network_docker_bridge_cidr" {
