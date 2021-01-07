@@ -17,3 +17,8 @@ variable "vm_password" {
     description = "The password of the jumpbox"
     type = string
 }
+
+variable "subnet_id" {
+    description = "The ID of the Subnet"
+    type = string
+}

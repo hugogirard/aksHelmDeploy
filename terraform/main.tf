@@ -35,6 +35,7 @@ module "jumpbox" {
   resourceGroupName = azurerm_resource_group.rg.name
   vm_user = var.vm_user
   vm_password = var.vm_password
+  subnet_id = azurerm_subnet.jumpBoxSubnet.id
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
