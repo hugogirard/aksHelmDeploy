@@ -1,3 +1,5 @@
+
+
 resource "azurerm_network_interface" "vm_nic" {
   name                = "jumpbox-nic"
   location            = var.location
