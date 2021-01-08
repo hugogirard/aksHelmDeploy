@@ -24,21 +24,22 @@ resource "azurerm_subnet" "jumpBoxSubnet" {
   address_prefixes     = var.jumpbox_address_space
 }
 
-module "jumpbox" {
-  source = "./modules/jumpbox"
+# module "jumpbox" {
+#   source = "./modules/jumpbox"
 
-  location = azurerm_resource_group.rg.location
-  resourceGroupName = azurerm_resource_group.rg.name
-  vm_user = var.vm_user
-  vm_password = var.vm_password
-  subnet_id = azurerm_subnet.jumpBoxSubnet.id
-}
+#   location = azurerm_resource_group.rg.location
+#   resourceGroupName = azurerm_resource_group.rg.name
+#   vm_user = var.vm_user
+#   vm_password = var.vm_password
+#   subnet_id = azurerm_subnet.jumpBoxSubnet.id
+# }
 
 # resource "azurerm_kubernetes_cluster" "aks" {
 #   name                = "${var.prefix}-k8s"
 #   location            = azurerm_resource_group.rg.location
 #   resource_group_name = azurerm_resource_group.rg.name
 #   dns_prefix          = "${var.prefix}-k8s"
+#   depends_on = [ azurerm_virtual_network.vnet, azurerm_subnet.aksSubnet ]
 
 #   default_node_pool {
 #     name       = "default"
