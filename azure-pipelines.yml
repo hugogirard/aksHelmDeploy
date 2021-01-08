@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '33e468aa-35af-467a-91fd-54565148d1cc'
+  dockerRegistryServiceConnection: 'hg28acr'
   imageRepository: 'todoapi'
   containerRegistry: 'hg28acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/TodoApi/Dockerfile'
