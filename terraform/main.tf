@@ -19,7 +19,7 @@ resource "azurerm_subnet" "aksSubnet" {
 
 module "acr" {
   source              = "./modules/containerRegistry"
-  
+  prefix              = var.prefix
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
