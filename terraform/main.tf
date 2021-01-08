@@ -35,15 +35,17 @@ resource "azurerm_subnet_network_security_group_association" "assoJumpbox" {
   network_security_group_id = azurerm_network_security_group.nsgJumpbox.id
 }
 
-# module "jumpbox" {
-#   source = "./modules/jumpbox"
+module "jumpbox" {
+  source = "./modules/jumpbox"
 
-#   location = azurerm_resource_group.rg.location
-#   resourceGroupName = azurerm_resource_group.rg.name
-#   vm_user = var.vm_user
-#   vm_password = var.vm_password
-#   subnet_id = azurerm_subnet.jumpBoxSubnet.id
-# }
+  depends_on = [ azurerm_kubernetes_cluster.aks ]
+
+  location = azurerm_resource_group.rg.location
+  resourceGroupName = azurerm_resource_group.rg.name
+  vm_user = var.vm_user
+  vm_password = var.vm_password
+  subnet_id = azurerm_subnet.jumpBoxSubnet.id
+}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${var.prefix}-k8s"
