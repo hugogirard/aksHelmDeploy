@@ -21,6 +21,7 @@ module "acr" {
   source              = "./modules/containerRegistry"
   prefix              = var.prefix
   rgName              = azurerm_resource_group.rg.name
+  location            = var.location
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
