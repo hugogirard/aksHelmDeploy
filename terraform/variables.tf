@@ -50,7 +50,7 @@ variable "jumpbox_subnet_name" {
 variable "jumpbox_address_space" {
     description = "The address space of the subnet for the jumpbox"
     type = list(string)
-    default = ["10.0.1.0/27"]
+    default = ["10.1.0.0/27"]
 }
 
 variable "network_docker_bridge_cidr" {

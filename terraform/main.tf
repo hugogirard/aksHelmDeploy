@@ -24,63 +24,74 @@ resource "azurerm_subnet" "jumpBoxSubnet" {
   address_prefixes     = var.jumpbox_address_space
 }
 
-# module "jumpbox" {
-#   source = "./modules/jumpbox"
+resource "azurerm_network_security_group" "nsgJumpbox" {
+  name                = "nsg-jumpbox"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
 
-#   location = azurerm_resource_group.rg.location
-#   resourceGroupName = azurerm_resource_group.rg.name
-#   vm_user = var.vm_user
-#   vm_password = var.vm_password
-#   subnet_id = azurerm_subnet.jumpBoxSubnet.id
-# }
+resource "azurerm_subnet_network_security_group_association" "assoJumpbox" {
+  subnet_id                 = azurerm_subnet.jumpBoxSubnet.id
+  network_security_group_id = azurerm_network_security_group.nsgJumpbox.id
+}
 
-# resource "azurerm_kubernetes_cluster" "aks" {
-#   name                = "${var.prefix}-k8s"
-#   location            = azurerm_resource_group.rg.location
-#   resource_group_name = azurerm_resource_group.rg.name
-#   dns_prefix          = "${var.prefix}-k8s"
-#   depends_on = [ azurerm_virtual_network.vnet, azurerm_subnet.aksSubnet ]
+module "jumpbox" {
+  source = "./modules/jumpbox"
 
-#   default_node_pool {
-#     name       = "default"
-#     node_count = 1
-#     vm_size    = "Standard_DS2_v2"
-#     vnet_subnet_id = azurerm_subnet.aksSubnet.id
-#   }
+  location = azurerm_resource_group.rg.location
+  resourceGroupName = azurerm_resource_group.rg.name
+  vm_user = var.vm_user
+  vm_password = var.vm_password
+  subnet_id = azurerm_subnet.jumpBoxSubnet.id
+}
 
-#   network_profile {
-#     network_plugin = "azure"
-#     load_balancer_sku = "standard"
-#     docker_bridge_cidr = var.network_docker_bridge_cidr
-#     dns_service_ip     = var.network_dns_service_ip
-#     service_cidr       = var.network_service_cidr    
-#   }
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = "${var.prefix}-k8s"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "${var.prefix}-k8s"
+  depends_on = [ azurerm_virtual_network.vnet, azurerm_subnet.aksSubnet ]
 
-#   identity {
-#     type = "SystemAssigned"
-#   }
+  default_node_pool {
+    name       = "default"
+    node_count = 1
+    vm_size    = "Standard_DS2_v2"
+    vnet_subnet_id = azurerm_subnet.aksSubnet.id
+  }
 
-#   private_cluster_enabled = true
+  network_profile {
+    network_plugin = "azure"
+    load_balancer_sku = "standard"
+    docker_bridge_cidr = var.network_docker_bridge_cidr
+    dns_service_ip     = var.network_dns_service_ip
+    service_cidr       = var.network_service_cidr    
+  }
 
-#   addon_profile {
-#     aci_connector_linux {
-#       enabled = false
-#     }
+  identity {
+    type = "SystemAssigned"
+  }
 
-#     azure_policy {
-#       enabled = false
-#     }
+  private_cluster_enabled = true
 
-#     http_application_routing {
-#       enabled = false
-#     }
+  addon_profile {
+    aci_connector_linux {
+      enabled = false
+    }
 
-#     kube_dashboard {
-#       enabled = true
-#     }
+    azure_policy {
+      enabled = false
+    }
 
-#     oms_agent {
-#       enabled = false
-#     }
-#   }
-# }
+    http_application_routing {
+      enabled = false
+    }
+
+    kube_dashboard {
+      enabled = true
+    }
+
+    oms_agent {
+      enabled = false
+    }
+  }
+}
