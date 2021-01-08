@@ -74,3 +74,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 }
+
+# Roles to give to the cluster
+resource "azurerm_role_assignment" "aks_acr" {
+  scope                   = module.acr.acrId
+  role_definition_name    = "AcrPull"
+  principal_id            = azurerm_kubernetes_cluster.kubelet_identity[0].object_id
+}
