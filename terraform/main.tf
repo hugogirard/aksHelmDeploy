@@ -22,22 +22,25 @@ resource "azurerm_subnet" "jumpBoxSubnet" {
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.jumpbox_address_space
+  count = "${var.private_cluster_enabled == "true" ? 1 : 0}"
 }
 
 resource "azurerm_network_security_group" "nsgJumpbox" {
   name                = "nsg-jumpbox"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  count = "${var.private_cluster_enabled == "true" ? 1 : 0}"
 }
 
 resource "azurerm_subnet_network_security_group_association" "assoJumpbox" {
   subnet_id                 = azurerm_subnet.jumpBoxSubnet.id
   network_security_group_id = azurerm_network_security_group.nsgJumpbox.id
+  count = "${var.private_cluster_enabled == "true" ? 1 : 0}"
 }
 
 module "jumpbox" {
   source = "./modules/jumpbox"
-
+  
   depends_on = [ azurerm_kubernetes_cluster.aks ]
 
   location = azurerm_resource_group.rg.location
@@ -45,6 +48,7 @@ module "jumpbox" {
   vm_user = var.vm_user
   vm_password = var.vm_password
   subnet_id = azurerm_subnet.jumpBoxSubnet.id
+  enabled = var.private_cluster_enabled
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -73,7 +77,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-  private_cluster_enabled = true
+  private_cluster_enabled = var.private_cluster_enabled
 
   addon_profile {
     aci_connector_linux {

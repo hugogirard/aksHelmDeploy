@@ -1,3 +1,7 @@
+variable "enabled" {
+  description = "Switch to create the jumpbox or not"
+}
+
 variable "location" {
     description = "The location of the resource"
     type = string

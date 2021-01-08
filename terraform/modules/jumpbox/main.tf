@@ -4,6 +4,7 @@ resource "azurerm_network_interface" "vm_nic" {
   name                = "jumpbox-nic"
   location            = var.location
   resource_group_name = var.resourceGroupName
+  count = "${var.enabled == "true" ? 1 : 0}"
 
   ip_configuration {
     name                          = "jumpboxipconf"
@@ -22,7 +23,8 @@ resource "azurerm_linux_virtual_machine" "jumpbox" {
   admin_username                  = var.vm_user
   admin_password                  = var.vm_password
   disable_password_authentication = false
-
+  count = "${var.enabled == "true" ? 1 : 0}"
+  
   os_disk {
     name                 = "jumpboxOsDisk"
     caching              = "ReadWrite"

@@ -25,6 +25,11 @@ variable "vnet_name" {
     default = "aks-vnet"
 }
 
+variable "private_cluster_enabled" {
+    description = "Switch to determine if we are using a private cluster"
+    default = false
+}
+
 variable "address_space" {
   description = "The address spacing of the VNET"
   type = list(string)
