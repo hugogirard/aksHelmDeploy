@@ -63,12 +63,16 @@ variable "network_docker_bridge_cidr" {
     default = "172.17.0.1/16"
 }
 
-variable "network_dns_service_ip" {
-    description = "The DNS Service IP"
-    default = "10.2.0.10"
+variable "sqlAdmin" {
+  description = "The username of the SQL Server database"
+  type = string
+  sensitive = true
+  default = "__sqlAdmin__"
 }
 
-variable "network_service_cidr" {
-    description = "The service CIDR"
-    default = "10.2.0.0/24"
+variable "sqlPassword" {
+  description = "The password of the sql server database"
+  type = string
+  sensitive = true
+  default = "__sqlPassword__"
 }

@@ -24,12 +24,21 @@ module "acr" {
   location            = var.location
 }
 
+module "db" {
+  source              = "./modules/sql"
+  prefix              = var.prefix
+  rgName              = azurerm_resource_group.rg.name
+  location            = var.location
+  sqlAdmin            = var.sqlAdmin
+  sqlPassword         = var.sqlPassword
+  depends_on = [ azurerm_virtual_network.vnet ]
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${var.prefix}-k8s"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "${var.prefix}-k8s"
-  depends_on = [ azurerm_virtual_network.vnet, azurerm_subnet.aksSubnet ]
 
   default_node_pool {
     name       = "default"
@@ -76,8 +85,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # Roles to give to the cluster
-resource "azurerm_role_assignment" "aks_acr" {
-  scope                   = module.acr.acrId
-  role_definition_name    = "AcrPull"
-  principal_id            = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-}
+# resource "azurerm_role_assignment" "aks_acr" {
+#   scope                   = module.acr.acrId
+#   role_definition_name    = "AcrPull"
+#   principal_id            = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+# }
