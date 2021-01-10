@@ -15,7 +15,8 @@ variables:
   containerRegistry: 'hg28acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/TodoApi/Dockerfile'
   tag: '$(Build.BuildId)'
-  
+  aksConnection: 'dev-hg28-k8s-default-1610303991208'
+
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
@@ -42,6 +43,7 @@ stages:
           enableTelemetry: true
   - job: Build
     displayName: Build
+    dependsOn: ReplaceToken
     steps:
       - task: Docker@2
         displayName: Build and push an image to container registry
@@ -54,6 +56,7 @@ stages:
             $(tag)
   - job: PublishArtifact
     displayName: Publish Helm Chart
+    dependsOn: Build
     steps:
       - task: CopyFiles@2
         displayName: Copy Helm Chart
@@ -66,3 +69,36 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'chart'
           publishLocation: 'Container'
+- stage: Deploy
+  displayName: Deploy Helm Chart
+  dependsOn: Build
+  pool:
+    vmImage: $(vmImageName)           
+  jobs:      
+    - deployment: Deploy
+      displayName: Deploy Helm Chart
+      environment: 'dev'
+      strategy:
+       runOnce:
+         deploy:
+           steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'chart'
+                downloadPath: '$(System.ArtifactsDirectory)'
+            - task: HelmDeploy@0
+              displayName: List installed package
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: $(aksConnection)
+                command: 'ls'
+            - task: HelmDeploy@0
+              displayName: Deploy new package version
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: $(aksConnection)
+                command: 'upgrade'
+                chartType: 'FilePath'
+                chartPath: '$(System.ArtifactsDirectory)/chart/k8s/todoapi'
