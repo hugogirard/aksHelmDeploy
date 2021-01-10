@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  "{{ .Chart.Name }}_svc"
+spec:
+  selector:
+    app:  {{ .Chart.Name }}
+  type:  LoadBalancer
+  ports:
+  - port:  80

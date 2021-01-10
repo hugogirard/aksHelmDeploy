@@ -1,0 +1,7 @@
+
+replicaCount: 1
+
+image:
+  repository: __containerRegistry__
+  tag: __tag__
+  pullPolicy: IfNotPresent  
