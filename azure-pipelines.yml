@@ -101,4 +101,6 @@ stages:
                 kubernetesServiceConnection: $(aksConnection)
                 command: 'upgrade'
                 chartType: 'FilePath'
+                releaseName: 'todoapi'
                 chartPath: '$(System.ArtifactsDirectory)/chart/k8s/todoapi'
+                    
