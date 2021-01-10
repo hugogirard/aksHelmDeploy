@@ -90,11 +90,13 @@ stages:
                 artifactName: 'chart'
                 downloadPath: '$(System.ArtifactsDirectory)'
             - task: HelmDeploy@0
+              displayName: List installed package
               inputs:
                 connectionType: 'Kubernetes Service Connection'
                 kubernetesServiceConnection: $(aksConnection)
                 command: 'ls'
             - task: HelmDeploy@0
+              displayName: Deploy new package version
               inputs:
                 connectionType: 'Kubernetes Service Connection'
                 kubernetesServiceConnection: $(aksConnection)
