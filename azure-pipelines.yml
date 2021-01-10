@@ -68,3 +68,22 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'chart'
           publishLocation: 'Container'
+- stage: Deploy
+  displayName: Deploy Helm Chart
+  dependsOn: Build
+  pool:
+    vmImage: $(vmImageName)           
+  jobs:      
+    - deployment: Deploy
+      displayName: Deploy Helm Chart
+      environment: ''
+      strategy:
+       runOnce:
+         deploy:
+           steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'chart'
+                downloadPath: '$(System.ArtifactsDirectory)'
