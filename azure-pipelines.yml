@@ -76,7 +76,7 @@ stages:
   jobs:      
     - deployment: Deploy
       displayName: Deploy Helm Chart
-      environment: ''
+      environment: 'dev'
       strategy:
        runOnce:
          deploy:
