@@ -71,6 +71,8 @@ stages:
 - stage: Deploy
   displayName: Deploy Helm Chart
   dependsOn: Build
+  variables:
+    aksConnection: 'dev-hg28-k8s-default-1610303991208'
   pool:
     vmImage: $(vmImageName)           
   jobs:      
@@ -87,3 +89,15 @@ stages:
                 downloadType: 'single'
                 artifactName: 'chart'
                 downloadPath: '$(System.ArtifactsDirectory)'
+            - task: HelmDeploy@0
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: $(aksConnection)
+                command: 'ls'
+            - task: HelmDeploy@0
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: $(aksConnection)
+                command: 'upgrade'
+                chartType: 'FilePath'
+                chartPath: '$(System.ArtifactsDirectory)/chart/k8s/todoapi'
