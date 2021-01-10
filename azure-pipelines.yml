@@ -15,7 +15,8 @@ variables:
   containerRegistry: 'hg28acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/TodoApi/Dockerfile'
   tag: '$(Build.BuildId)'
-  
+  aksConnection: 'dev-hg28-k8s-default-1610303991208'
+
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
@@ -71,8 +72,6 @@ stages:
 - stage: Deploy
   displayName: Deploy Helm Chart
   dependsOn: Build
-  variables:
-    aksConnection: 'dev-hg28-k8s-default-1610303991208'
   pool:
     vmImage: $(vmImageName)           
   jobs:      
