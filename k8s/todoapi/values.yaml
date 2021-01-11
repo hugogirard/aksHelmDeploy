@@ -2,6 +2,6 @@
 replicaCount: 1
 
 image:
-  repository: __containerRegistry__
+  repository: __helmRepository__
   tag: __tag__
   pullPolicy: IfNotPresent  
