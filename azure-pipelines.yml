@@ -22,7 +22,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and creaet helm chart
   pool:
     vmImage: $(vmImageName)
   jobs:
@@ -41,10 +41,6 @@ stages:
           tokenSuffix: '__'
           useLegacyPattern: false
           enableTelemetry: true
-  - job: Build
-    displayName: Build
-    dependsOn: ReplaceToken
-    steps:
       - task: Docker@2
         displayName: Build and push an image to container registry
         inputs:
@@ -54,11 +50,8 @@ stages:
           containerRegistry: $(dockerRegistryServiceConnection)
           tags: |
             $(tag)
-  - job: PublishArtifact
-    displayName: Publish Helm Chart
-    dependsOn: Build
-    steps:
       - task: HelmDeploy@0
+        displayName: Package Helm Chart
         inputs:
           command: 'package'
           chartPath: 'k8s/todoapi'
