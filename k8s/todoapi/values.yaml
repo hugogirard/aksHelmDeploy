@@ -2,6 +2,6 @@
 replicaCount: 1
 
 image:
-  repository: __containerRegistry__
-  tag: __tag__
+  repository: hg28acr.azurecr.io/todoapi
+  tag: 511
   pullPolicy: IfNotPresent  
