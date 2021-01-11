@@ -58,6 +58,11 @@ stages:
     displayName: Publish Helm Chart
     dependsOn: Build
     steps:
+      - task: HelmDeploy@0
+        inputs:
+          command: 'package'
+          chartPath: 'k8s/todoapi'
+          chartVersion: $(tag)
       - task: CopyFiles@2
         displayName: Copy Helm Chart
         inputs:
@@ -69,36 +74,38 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'chart'
           publishLocation: 'Container'
-- stage: Deploy
-  displayName: Deploy Helm Chart
-  dependsOn: Build
-  pool:
-    vmImage: $(vmImageName)           
-  jobs:      
-    - deployment: Deploy
-      displayName: Deploy Helm Chart
-      environment: 'dev'
-      strategy:
-       runOnce:
-         deploy:
-           steps:
-            - task: DownloadBuildArtifacts@0
-              inputs:
-                buildType: 'current'
-                downloadType: 'single'
-                artifactName: 'chart'
-                downloadPath: '$(System.ArtifactsDirectory)'
-            - task: HelmDeploy@0
-              displayName: List installed package
-              inputs:
-                connectionType: 'Kubernetes Service Connection'
-                kubernetesServiceConnection: $(aksConnection)
-                command: 'ls'
-            - task: HelmDeploy@0
-              displayName: Deploy new package version
-              inputs:
-                connectionType: 'Kubernetes Service Connection'
-                kubernetesServiceConnection: $(aksConnection)
-                command: 'upgrade'
-                chartType: 'FilePath'
-                chartPath: '$(System.ArtifactsDirectory)/chart/k8s/todoapi'
+# - stage: Deploy
+#   displayName: Deploy Helm Chart
+#   dependsOn: Build
+#   pool:
+#     vmImage: $(vmImageName)           
+#   jobs:      
+#     - deployment: Deploy
+#       displayName: Deploy Helm Chart
+#       environment: 'dev'
+#       strategy:
+#        runOnce:
+#          deploy:
+#            steps:
+#             - task: DownloadBuildArtifacts@0
+#               inputs:
+#                 buildType: 'current'
+#                 downloadType: 'single'
+#                 artifactName: 'chart'
+#                 downloadPath: '$(System.ArtifactsDirectory)'
+#             - task: HelmDeploy@0
+#               displayName: List installed package
+#               inputs:
+#                 connectionType: 'Kubernetes Service Connection'
+#                 kubernetesServiceConnection: $(aksConnection)
+#                 command: 'ls'
+#             - task: HelmDeploy@0
+#               displayName: Deploy new package version
+#               inputs:
+#                 connectionType: 'Kubernetes Service Connection'
+#                 kubernetesServiceConnection: $(aksConnection)
+#                 command: 'upgrade'
+#                 chartType: 'FilePath'
+#                 releaseName: 'todoapi'
+#                 chartPath: '$(System.ArtifactsDirectory)/chart/k8s/todoapi'
+                    
