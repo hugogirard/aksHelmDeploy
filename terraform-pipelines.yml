@@ -10,7 +10,7 @@ variables:
   rgName: 'terraformState'
   location: 'eastus'
   strName: 'hgterrastate'
-  sp: 'SpHelmAKs'
+  sp: 'SpFullPower'
   tfContainerName: 'tstate'
   tfKey: 'terraform.tfstate'
   prefix: 'hg28'
