@@ -18,7 +18,6 @@ module "vnet" {
   rgName               = azurerm_resource_group.rg.name
   subnet_name          = var.subnet_name
   subnet_address_space = var.subnet_address_space
-  prefix               = var.prefix
 }
 
 module "aks" {
