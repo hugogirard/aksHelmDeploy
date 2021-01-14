@@ -34,7 +34,7 @@ module "aks" {
 }
 
 module "web" {
-    source                     = "./modules/web"
+    source                     = "./modules/webApp"
     prefix                     = var.prefix
     location                   = var.location
     rgName                     = azurerm_resource_group.rg.name
