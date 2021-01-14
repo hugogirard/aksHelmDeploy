@@ -11,7 +11,7 @@ module "acr" {
 }
 
 module "vnet" {
-  source               = "./modules/containerRegistry"
+  source               = "./modules/network"
   vnet_name            = var.vnet_name
   address_space        = var.address_space
   location             = var.location
