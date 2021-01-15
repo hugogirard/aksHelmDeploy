@@ -10,12 +10,12 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'hg28acr'
+  dockerRegistryServiceConnection: 'SpFullPower'
   imageRepository: 'todoapi'
   containerRegistry: 'hg28acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/TodoApi/Dockerfile'
   tag: '$(Build.BuildId)'
-  aksConnection: 'dev-hg28-k8s-default-1610303991208'
+  aksConnection: 'dev-hg28-k8s-default-1610673308482'
   helmRepository: hg28acr.azurecr.io/todoapi
 
   # Agent VM image name

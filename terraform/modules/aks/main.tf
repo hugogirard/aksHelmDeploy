@@ -49,6 +49,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # Roles to give to the cluster
+# Was running in a tenant that my SP doesn't have the write role
+# If is the case attach with AZ CLI otherewise uncomment this line
 # resource "azurerm_role_assignment" "aks_acr" {
 #   scope                   = var.acrId
 #   role_definition_name    = "AcrPull"
