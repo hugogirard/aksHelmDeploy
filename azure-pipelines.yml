@@ -23,7 +23,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and creaet helm chart
+  displayName: Build and create helm chart
   pool:
     vmImage: $(vmImageName)
   jobs:
@@ -68,7 +68,7 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'chart'
           publishLocation: 'Container'
-- stage: Deploy
+- stage: DeployAks
   displayName: Deploy Helm Chart
   dependsOn: Build
   pool:
@@ -102,4 +102,28 @@ stages:
                 chartType: 'FilePath'
                 releaseName: 'todoapi'
                 chartPath: '$(System.ArtifactsDirectory)/chart/todoapi-$(tag).tgz'
-                    
+
+- stage: DeployWebApp
+  displayName: Deploy Web App
+  dependsOn: Build
+  pool:
+    vmImage: $(vmImageName)
+  jobs:      
+    - deployment: Deploy
+      displayName: Deploy Web App
+      environment: 'devWeb'
+      strategy:
+       runOnce:
+         deploy:
+           steps:
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'chart'
+                downloadPath: '$(System.ArtifactsDirectory)'
+            - task: AzureWebAppContainer@1
+              inputs:
+                azureSubscription: 'SpFullPower'
+                appName: 'hg28-appservice'
+                containers: '$(helmRepository):$(tag)'
