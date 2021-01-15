@@ -22,6 +22,10 @@ resource "azurerm_app_service" "main" {
     linux_fx_version = "DOCKER|appsvcsample/python-helloworld:latest"
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "DOCKER_REGISTRY_SERVER_URL"          = "https://index.docker.io"
